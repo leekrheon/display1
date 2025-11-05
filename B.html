@@ -1,36 +1,76 @@
-<!-- Firebase 연결 (똑같이 포함해야 함) -->
-<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>생각의 흐름</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      height: 100vh;
+      width: 100vw;
+      background: radial-gradient(circle at center, #ffffff, #e0e0e0);
+      position: relative;
+      font-family: sans-serif;
+    }
 
-<script>
-  const firebaseConfig = {
-    apiKey: "…",
-    authDomain: "…",
-    databaseURL: "…",
-    projectId: "…",
-    storageBucket: "…",
-    messagingSenderId: "…",
-    appId: "…"
-  };
+    .floating-text {
+      position: absolute;
+      font-size: 22px;
+      font-weight: 500;
+      opacity: 0.9;
+      white-space: nowrap;
+      animation: floatUp 12s linear forwards;
+      user-select: none;
+    }
 
-  firebase.initializeApp(firebaseConfig);
-  const db = firebase.database();
+    @keyframes floatUp {
+      0% { transform: translateY(0); opacity: 1; }
+      100% { transform: translateY(-100vh); opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+  <!-- ✅ Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
 
-  // 새 메시지가 추가될 때마다 표시
-  db.ref('messages').on('child_added', snapshot => {
-    const text = snapshot.val().text;
-    showFloatingText(text);
-  });
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDwMaWKl3EgBMMGKy5llg3OsscHbZOrhYo",
+      authDomain: "display1-2e379.firebaseapp.com",
+      databaseURL: "https://display1-2e379-default-rtdb.europe-west1.firebasedatabase.app",
+      projectId: "display1-2e379",
+      storageBucket: "display1-2e379.firebasestorage.appspot.com",
+      messagingSenderId: "509686302807",
+      appId: "1:509686302807:web:7a73181d53f7ca22363b12"
+    };
 
-  function showFloatingText(text) {
-    const el = document.createElement('div');
-    el.textContent = text;
-    el.style.position = 'absolute';
-    el.style.left = Math.random() * window.innerWidth + 'px';
-    el.style.top = window.innerHeight + 'px';
-    el.style.animation = 'floatUp 10s linear forwards';
-    document.body.appendChild(el);
-    setTimeout(() => el.remove(), 10000);
-  }
-</script>
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    // 실시간 데이터 수신
+    db.ref('messages').on('child_added', snapshot => {
+      const data = snapshot.val();
+      if (data && data.text) showFloatingText(data.text);
+    });
+
+    // 텍스트 떠오르는 효과
+    function showFloatingText(text) {
+      const el = document.createElement('div');
+      el.className = 'floating-text';
+      el.textContent = text;
+
+      el.style.left = Math.random() * (window.innerWidth - 150) + 'px';
+      el.style.bottom = '0px';
+      el.style.color = `hsl(${Math.random() * 360}, 70%, 45%)`;
+
+      document.body.appendChild(el);
+
+      // 12초 후 제거
+      setTimeout(() => el.remove(), 12000);
+    }
+  </script>
+</body>
+</html>
 
