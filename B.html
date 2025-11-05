@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>생각이 떠다니는 공간</title>
+  <style>
+    html, body {
+      margin: 0; padding: 0;
+      width: 100%; height: 100%;
+      background: radial-gradient(circle at center, #eef2ff, #cbd5e1);
+      overflow: hidden;
+      font-family: sans-serif;
+    }
+    .floating-text {
+      position: absolute;
+      font-size: 22px;
+      font-weight: bold;
+      opacity: 0;
+      animation: floatUp 12s ease-in-out forwards;
+    }
+    @keyframes floatUp {
+      0% { transform: translateY(0); opacity: 1; }
+      100% { transform: translateY(-200px); opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+
+  <script>
+    // 🔑 Firebase 설정 (A.html과 동일해야 함)
+    const firebaseConfig = {
+      apiKey: "AIzaSyDwMaWKl3EgBMMGKy5llg3OsscHbZOrhYo",
+      authDomain: "display1-2e379.firebaseapp.com",
+      databaseURL: "https://display1-2e379-default-rtdb.europe-west1.firebasedatabase.app",
+      projectId: "display1-2e379",
+      storageBucket: "display1-2e379.firebasestorage.appspot.com",
+      messagingSenderId: "509686302807",
+      appId: "1:509686302807:web:7a73181d53f7ca22363b12"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    // Firebase에 새 메시지가 추가될 때마다 화면에 표시
+    db.ref('messages').on('child_added', snapshot => {
+      const text = snapshot.val().text;
+      showFloatingText(text);
+    });
+
+    // 텍스트를 랜덤 위치에서 떠오르게 표시하는 함수
+    function showFloatingText(text) {
+      const el = document.createElement('div');
+      el.className = 'floating-text';
+      el.textContent = text;
+
+      // 화면 랜덤 위치 지정
+      el.style.left = Math.random() * window.innerWidth + 'px';
+      el.style.top = (window.innerHeight - 50) + 'px';
+      el.style.color = `hsl(${Math.random() * 360}, 70%, 40%)`;
+
+      document.body.appendChild(el);
+
+      // 12초 후 제거
+      setTimeout(() => el.remove(), 12000);
+    }
+  </script>
+</body>
+</html>
