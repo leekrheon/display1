@@ -21,7 +21,7 @@
   <input type="text" id="messageInput" placeholder="이곳에 입력..." />
   <button id="sendButton">보내기</button>
 
-  <!-- ✅ Firebase SDK CDN (절대 경로, 정확히 이렇게 써야 404 안 뜸) -->
+  <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
 
@@ -46,9 +46,11 @@
       const text = input.value.trim();
       if (text) {
         db.ref('messages').push({ text: text })
-          .then(() => console.log('전송 성공'))
-          .catch(err => console.error('전송 실패:', err.message));
-        input.value = '';
+          .then(() => {
+            alert('전송되었습니다!');
+            input.value = '';
+          })
+          .catch(err => alert('오류: ' + err.message));
       } else {
         alert('내용을 입력해주세요.');
       }
@@ -56,5 +58,6 @@
   </script>
 </body>
 </html>
+
 
 
