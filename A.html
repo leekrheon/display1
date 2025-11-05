@@ -1,63 +1,33 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-  <meta charset="UTF-8" />
-  <title>생각을 남겨주세요</title>
-  <style>
-    body {
-      font-family: sans-serif;
-      text-align: center;
-      margin-top: 100px;
-      background: #f2f2f2;
+
+<!-- Firebase 연결 (반드시 포함) -->
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+
+<script>
+  const firebaseConfig = {
+    apiKey: "…",
+    authDomain: "…",
+    databaseURL: "…",
+    projectId: "…",
+    storageBucket: "…",
+    messagingSenderId: "…",
+    appId: "…"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.database();
+
+  // 메시지 입력/전송
+  const input = document.getElementById('messageInput');
+  const button = document.getElementById('sendButton');
+  button.addEventListener('click', () => {
+    const text = input.value.trim();
+    if (text) {
+      db.ref('messages').push({ text: text });
+      input.value = '';
     }
-    input, button {
-      font-size: 18px;
-      padding: 10px;
-    }
-  </style>
-</head>
-<body>
-  <h1>당신의 생각을 입력해주세요</h1>
-  <input type="text" id="messageInput" placeholder="이곳에 입력..." />
-  <button id="sendButton">보내기</button>
-
-  <!-- Firebase SDKs -->
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
-
-  <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyDwMaWKl3EgBMMGKy5llg3OsscHbZOrhYo",
-      authDomain: "display1-2e379.firebaseapp.com",
-      databaseURL: "https://display1-2e379-default-rtdb.europe-west1.firebasedatabase.app",
-      projectId: "display1-2e379",
-      storageBucket: "display1-2e379.firebasestorage.appspot.com",
-      messagingSenderId: "509686302807",
-      appId: "1:509686302807:web:7a73181d53f7ca22363b12"
-    };
-
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
-
-    const input = document.getElementById('messageInput');
-    const button = document.getElementById('sendButton');
-
-    button.addEventListener('click', () => {
-      const text = input.value.trim();
-      if (text) {
-        db.ref('messages').push({ text: text })
-          .then(() => {
-            alert('전송되었습니다!');
-            input.value = '';
-          })
-          .catch(err => alert('오류: ' + err.message));
-      } else {
-        alert('내용을 입력해주세요.');
-      }
-    });
-  </script>
-</body>
-</html>
+  });
+</script>
 
 
 
