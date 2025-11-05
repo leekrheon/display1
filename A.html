@@ -2,29 +2,46 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
-  <title>생각을 남겨주세요</title>
-  <style>
-    body {
-      font-family: sans-serif;
-      text-align: center;
-      margin-top: 100px;
-      background: #f7f7f7;
-    }
-    input, button {
-      font-size: 18px;
-      padding: 10px;
-      margin: 5px;
-    }
-  </style>
+  <title>Firebase 연결 테스트</title>
 </head>
 <body>
-  <h1>당신의 생각을 입력해주세요</h1>
-  <input type="text" id="messageInput" placeholder="이곳에 입력..." />
-  <button id="sendButton">보내기</button>
+  <h2>Firebase 연결 테스트 페이지</h2>
+  <input type="text" id="msg" placeholder="메시지를 입력하세요">
+  <button id="sendBtn">보내기</button>
 
-  <!-- ✅ Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasej
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+  <script>
+    console.log("1. 스크립트 실행 시작");
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDwMaWKl3EgBMMGKy5llg3OsscHbZOrhYo",
+      authDomain: "display1-2e379.firebaseapp.com",
+      databaseURL: "https://display1-2e379-default-rtdb.europe-west1.firebasedatabase.app",
+      projectId: "display1-2e379",
+      storageBucket: "display1-2e379.firebasestorage.appspot.com",
+      messagingSenderId: "509686302807",
+      appId: "1:509686302807:web:7a73181d53f7ca22363b12"
+    };
+
+    console.log("2. Firebase 초기화 시도");
+    firebase.initializeApp(firebaseConfig);
+    console.log("3. Firebase 앱 개수:", firebase.apps.length);
+
+    const db = firebase.database();
+    console.log("4. DB 객체 생성 완료");
+
+    document.getElementById('sendBtn').addEventListener('click', () => {
+      const msg = document.getElementById('msg').value;
+      console.log("5. 버튼 클릭 감지, 입력:", msg);
+      db.ref('messages').push({ text: msg })
+        .then(() => console.log("6. Firebase 전송 성공"))
+        .catch(err => console.error("7. 전송 오류:", err));
+    });
+  </script>
+</body>
+</html>
+
 
 
 
