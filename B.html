@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>생각의 흐름 - 원고지 책 버전</title>
+  <title>생각의 흐름 - 원고지 버전</title>
 
   <!-- ✅ 폰트 -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -13,10 +13,12 @@
     body {
       font-family: 'Diphylleia', serif;
       margin: 0;
-      background-image: url('https://i.imgur.com/gVhE4VZ.jpg'); /* 📖 고풍스러운 책 배경 */
+
+      background-image: url('paper.jpg');
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
+
       display: flex;
       flex-direction: column;
       justify-content: flex-start;
@@ -26,68 +28,46 @@
       position: relative;
     }
 
-    /* ✅ 상단 카운터 */
+    /* ✅ 상단 카운터 (오른쪽 정렬) */
     #counter {
       font-family: 'Diphylleia', serif;
       font-size: 22px;
       color: #ffffff;
       font-weight: 600;
       position: absolute;
-      top: 40px;
-      right: 10%;
+      top: 40px;        /* Y축 위치는 그대로 */
+      right: 10%;       /* X축 정렬 조정 */
       white-space: nowrap;
       text-align: right;
     }
 
-    /* ✅ 원고지 + 책 테두리 */
-    #bookFrame {
-      position: relative;
-      width: 85%;
-      height: 80%;
-      margin-top: 80px;
-      border: 20px solid rgba(139, 69, 19, 0.8); /* 📕 고풍스러운 나무색 테두리 */
-      border-radius: 16px;
-      box-shadow: 0 0 40px rgba(0, 0, 0, 0.4), inset 0 0 40px rgba(0, 0, 0, 0.3);
-      background: linear-gradient(to right, #f8f5ef 50%, #f3efe8 50%);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    /* ✅ 원고지 느낌 텍스트 */
+    /* ✅ 원고지 느낌의 텍스트 박스 (가로줄만) */
     #textContainer {
       font-family: 'Song Myung', serif;
-      width: 90%;
-      height: 90%;
+      position: relative;
+      width: 80%;
+      height: 70%;
+      border-radius: 12px;
       padding: 30px 35px;
       font-size: 20px;
-      line-height: 1.8;
+      line-height: 1.7;
       overflow-y: auto;
       color: #222;
+      word-wrap: break-word;
+
+      margin-top: 80px; /* ✅ 카운터와 겹치지 않도록 아래로 내림 */
+
+      /* ✅ 가로줄 + 질감 */
       background:
-        linear-gradient(to bottom, rgba(170, 58, 58, 0.25) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(170, 58, 58, 0.3) 1px, transparent 1px),
         url('https://www.transparenttextures.com/patterns/paper-fibers.png');
       background-size: 100% 32px, 400px 400px;
       background-blend-mode: multiply;
-      background-color: rgba(255, 255, 255, 0.92);
-      box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.25);
-      border-radius: 10px;
-      position: relative;
+      background-color: rgba(255, 255, 255, 0.85);
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.25);
     }
 
-    /* ✅ 책갈피 */
-    #bookmark {
-      position: absolute;
-      top: -10px;
-      right: 40px;
-      width: 30px;
-      height: 120px;
-      background: linear-gradient(to bottom, #b22222, #8b0000);
-      border-radius: 4px;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
-      clip-path: polygon(0 0, 100% 0, 100% 85%, 50% 100%, 0 85%);
-    }
-
+    /* 스크롤바 */
     #textContainer::-webkit-scrollbar {
       width: 8px;
     }
@@ -96,6 +76,7 @@
       border-radius: 4px;
     }
 
+    /* 문장 스타일 */
     .sentence {
       display: inline;
       font-weight: 500;
@@ -110,16 +91,15 @@
   </style>
 </head>
 <body>
+  <!-- ✅ 카운터는 오른쪽 상단 -->
   <div id="counter">이야기 완성까지 남은 문장 수 : 50</div>
 
-  <div id="bookFrame">
-    <div id="bookmark"></div>
-    <div id="textContainer">
-      백설공주는 마녀가 건넨 탐스럽게 빨간 사과를 한입 크게 베어물었고,
-      마녀는 그런 공주를 보며 의미심장한 웃음을 짓고 있었다.
-    </div>
+  <div id="textContainer">
+    백설공주는 마녀가 건넨 탐스럽게 빨간 사과를 한입 크게 베어물었고,
+    마녀는 그런 공주를 보며 의미심장한 웃음을 짓고 있었다.
   </div>
 
+  <!-- ✅ Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
 
@@ -140,7 +120,12 @@
     const counter = document.getElementById('counter');
 
     let remaining = 50;
-    const palette = ['#3e2723', '#4a148c', '#1a237e', '#880e4f', '#263238', '#5d4037', '#6a1b9a', '#1565c0', '#b71c1c', '#37474f'];
+
+    // ✅ 어두운 잉크 계열 색상
+    const palette = [
+      '#3e2723', '#4a148c', '#1a237e', '#880e4f', '#263238',
+      '#5d4037', '#6a1b9a', '#1565c0', '#b71c1c', '#37474f'
+    ];
 
     db.ref('messages').on('child_added', (snapshot) => {
       const data = snapshot.val();
