@@ -2,10 +2,9 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
-  <title>백설공주 이야기의 다음 문장,
-         어떻게 이어질까요?</title>
+  <title>백설공주 이야기의 다음 문장, 어떻게 이어질까요?</title>
 
-  <!-- ✅ Diphylleia 폰트 불러오기 -->
+  <!-- ✅ Diphylleia 폰트 -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Diphylleia&display=swap" rel="stylesheet">
@@ -18,34 +17,38 @@
       align-items: center;
       height: 100vh;
       margin: 0;
-
-      /* ✅ 배경 이미지 (원하는 사진으로 교체 가능) */
       background-image: url('paper2.jpg');
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
-
       font-family: 'Diphylleia', serif;
       color: #ffffff;
+      text-align: center;
+      padding: 0 20px;
     }
 
+    /* ✅ 제목: 2줄, 가운데 정렬 */
     h1 {
-      font-size: 50px;
+      font-size: 2.6rem; /* 모바일에서도 크게 */
       font-weight: 600;
-      margin-bottom: 40px;
+      margin-bottom: 50px;
+      line-height: 1.3;
+      white-space: pre-line; /* 줄바꿈 적용 */
+      text-align: center;
       color: #ffffff;
-      text-shadow: none;
     }
 
+    /* ✅ 입력창 */
     input {
-      width: 400px;
-      font-size: 20px;
-      padding: 14px 16px;
+      width: 80vw; /* 화면 비율에 맞게 */
+      max-width: 480px;
+      font-size: 1.3rem;
+      padding: 16px 20px;
       border: 2px solid #ffffff;
-      border-radius: 30px;
+      border-radius: 35px;
       outline: none;
       text-align: center;
-      margin-bottom: 20px;
+      margin-bottom: 24px;
       background: rgba(255, 255, 255, 0.15);
       color: #ffffff;
       transition: 0.3s ease;
@@ -54,19 +57,21 @@
 
     input::placeholder {
       color: rgba(255, 255, 255, 0.6);
+      font-size: 1.2rem;
     }
 
     input:focus {
       background: rgba(255, 255, 255, 0.25);
     }
 
+    /* ✅ 버튼 */
     button {
       font-family: 'Diphylleia', serif;
-      font-size: 20px;
-      padding: 14px 36px;
-      border-radius: 30px;
-      border: 4px solid #ffffff;
-      background: rgba(255, 255, 255, 0.1);
+      font-size: 1.4rem;
+      padding: 16px 40px;
+      border-radius: 40px;
+      border: 3px solid #ffffff;
+      background: rgba(255, 255, 255, 0.15);
       color: #ffffff;
       cursor: pointer;
       font-weight: 600;
@@ -81,13 +86,30 @@
     button:active {
       transform: scale(0.97);
     }
+
+    /* ✅ 반응형 (더 작은 모바일 대응) */
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 2rem;
+        margin-bottom: 40px;
+      }
+      input {
+        font-size: 1.1rem;
+        padding: 14px;
+      }
+      button {
+        font-size: 1.2rem;
+        padding: 14px 32px;
+      }
+    }
   </style>
 </head>
-<body>
-  <h1><strong>백설공주 이야기의 다음 문장,
-                  어떻게 이어질까요?</strong></h1>
 
-  <input type="text" id="msg" placeholder="여기에 문장을 입력하세요">
+<body>
+  <h1>백설공주 이야기의 다음 문장,  
+어떻게 이어질까요?</h1>
+
+  <input type="text" id="msg" placeholder="여기에 문장을 입력하세요" />
   <button id="sendBtn">작성</button>
 
   <!-- ✅ Firebase SDK -->
@@ -108,30 +130,26 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    // ✅ 버튼 클릭 시 Firebase에 문장 저장
-    document.getElementById('sendBtn').addEventListener('click', sendMessage);
-
-    // ✅ Enter 키로 전송 가능
-    document.getElementById('msg').addEventListener('keypress', function(event) {
-      if (event.key === 'Enter') {
-        sendMessage();
-      }
+    // ✅ 전송 기능
+    document.getElementById("sendBtn").addEventListener("click", sendMessage);
+    document.getElementById("msg").addEventListener("keypress", (e) => {
+      if (e.key === "Enter") sendMessage();
     });
 
     function sendMessage() {
-      const msg = document.getElementById('msg').value.trim();
+      const msg = document.getElementById("msg").value.trim();
       if (!msg) {
         alert("문장을 입력해주세요!");
         return;
       }
 
-      db.ref('messages').push({ text: msg })
+      db.ref("messages")
+        .push({ text: msg })
         .then(() => {
-          document.getElementById('msg').value = '';
+          document.getElementById("msg").value = "";
         })
-        .catch(err => console.error("전송 오류:", err));
+        .catch((err) => console.error("전송 오류:", err));
     }
   </script>
 </body>
 </html>
-
