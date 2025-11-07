@@ -46,17 +46,17 @@
       border-radius: 12px;
       padding: 30px 35px;
       font-size: 20px;
-      line-height: 1.9;
+      line-height: 1.7; /* ✅ 글씨가 줄과 겹치지 않게 최적화 */
       overflow-y: auto;
       color: #222;
       word-wrap: break-word;
 
       /* ✅ 질감 + 원고지 효과 */
-      background: 
+      background:
         linear-gradient(to right, rgba(170, 58, 58, 0.3) 1px, transparent 1px),
         linear-gradient(to bottom, rgba(170, 58, 58, 0.3) 1px, transparent 1px),
-        url('https://www.transparenttextures.com/patterns/paper-fibers.png'); /* 🌿 약한 종이 질감 */
-      background-size: 28px 28px, 28px 28px, 400px 400px;
+        url('https://www.transparenttextures.com/patterns/paper-fibers.png');
+      background-size: 32px 32px, 32px 32px, 400px 400px; /* ✅ 칸 크기 살짝 키움 */
       background-blend-mode: multiply;
       background-color: rgba(255, 255, 255, 0.85);
       box-shadow: 0 0 20px rgba(0, 0, 0, 0.25);
@@ -115,7 +115,7 @@
 
     let remaining = 50;
 
-    // ✅ 어두운 계열 잉크 색상
+    // ✅ 어두운 잉크색 계열
     const palette = [
       '#3e2723', '#4a148c', '#1a237e', '#880e4f', '#263238',
       '#5d4037', '#6a1b9a', '#1565c0', '#b71c1c', '#37474f'
