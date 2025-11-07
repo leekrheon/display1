@@ -7,7 +7,7 @@
   <!-- ✅ 폰트 -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Diphylleia&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Diphylleia&family=Song+Myung&display=swap" rel="stylesheet">
 
   <style>
     body {
@@ -30,6 +30,7 @@
 
     /* 상단 카운터 */
     #counter {
+      font-family: 'Diphylleia', serif;
       font-size: 22px;
       margin-bottom: 20px;
       color: #ffffff;
@@ -38,12 +39,11 @@
 
     /* ✅ 원고지 느낌의 텍스트 박스 */
     #textContainer {
+      font-family: 'Song Myung', serif;
       position: relative;
       width: 80%;
       height: 70%;
-      background: rgba(255, 255, 255, 0.85);
       border-radius: 12px;
-      box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
       padding: 30px 35px;
       font-size: 20px;
       line-height: 1.9;
@@ -51,12 +51,15 @@
       color: #222;
       word-wrap: break-word;
 
-      /* ✅ 원고지 배경 (격자무늬) */
-      background-image:
-        linear-gradient(to right, rgba(0, 0, 0, 0.08) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(0, 0, 0, 0.08) 1px, transparent 1px);
-      background-size: 28px 28px; /* 칸 크기 */
-      background-position: 15px 15px;
+      /* ✅ 질감 + 원고지 효과 */
+      background: 
+        linear-gradient(to right, rgba(170, 58, 58, 0.3) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(170, 58, 58, 0.3) 1px, transparent 1px),
+        url('https://www.transparenttextures.com/patterns/paper-fibers.png'); /* 🌿 약한 종이 질감 */
+      background-size: 28px 28px, 28px 28px, 400px 400px;
+      background-blend-mode: multiply;
+      background-color: rgba(255, 255, 255, 0.85);
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.25);
     }
 
     /* 스크롤바 */
@@ -74,7 +77,7 @@
       font-weight: 500;
       transition: color 0.3s ease, opacity 0.8s ease;
       opacity: 0;
-      animation: fadeIn 1s ease forwards; /* ✅ 부드럽게 나타남 */
+      animation: fadeIn 1s ease forwards;
     }
 
     @keyframes fadeIn {
@@ -112,9 +115,10 @@
 
     let remaining = 50;
 
+    // ✅ 어두운 계열 잉크 색상
     const palette = [
-      '#f44336', '#2196f3', '#4caf50', '#ff9800', '#9c27b0',
-      '#03a9f4', '#8bc34a', '#ff5722', '#e91e63', '#00bcd4'
+      '#3e2723', '#4a148c', '#1a237e', '#880e4f', '#263238',
+      '#5d4037', '#6a1b9a', '#1565c0', '#b71c1c', '#37474f'
     ];
 
     db.ref('messages').on('child_added', (snapshot) => {
