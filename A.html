@@ -11,7 +11,12 @@
       align-items: center;
       height: 100vh;
       margin: 0;
-      background: linear-gradient(180deg, #ffffff, #f5f5f5);
+      /* ✅ 여기를 바꾸면 배경이 바뀜 */
+      background-image: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1920&q=80');
+      background-size: cover;      /* 화면 꽉 채우기 */
+      background-position: center; /* 이미지 가운데 맞추기 */
+      background-repeat: no-repeat;
+      backdrop-filter: blur(4px);  /* 살짝 흐림 효과 (선택사항) */
       font-family: 'Noto Sans KR', sans-serif;
     }
 
@@ -19,40 +24,48 @@
       font-size: 28px;
       font-weight: 700;
       margin-bottom: 40px;
-      color: #333;
+      color: #fff; /* 배경 위에서도 잘 보이도록 흰색 */
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
     }
 
     input {
       width: 400px;
       font-size: 20px;
       padding: 14px 16px;
-      border: 2px solid #333;
+      border: 2px solid #fff;
       border-radius: 12px;
       outline: none;
       text-align: center;
       margin-bottom: 20px;
-      transition: 0.2s ease;
+      background: rgba(255, 255, 255, 0.15);
+      color: #fff;
+      transition: 0.3s ease;
+    }
+
+    input::placeholder {
+      color: rgba(255, 255, 255, 0.6);
     }
 
     input:focus {
-      border-color: #555;
-      background: #fafafa;
+      background: rgba(255, 255, 255, 0.25);
     }
 
     button {
       font-size: 20px;
       padding: 12px 30px;
       border-radius: 12px;
-      border: 3px solid #333;
-      background: white;
+      border: 3px solid #fff;
+      background: rgba(255, 255, 255, 0.15);
+      color: #fff;
       cursor: pointer;
       font-weight: 600;
-      transition: all 0.2s ease;
+      transition: all 0.3s ease;
+      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
     }
 
     button:hover {
-      background: #333;
-      color: white;
+      background: #fff;
+      color: #333;
     }
 
     button:active {
@@ -71,8 +84,6 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
 
   <script>
-    console.log("1. 스크립트 실행 시작");
-
     const firebaseConfig = {
       apiKey: "AIzaSyDwMaWKl3EgBMMGKy5llg3OsscHbZOrhYo",
       authDomain: "display1-2e379.firebaseapp.com",
@@ -83,27 +94,22 @@
       appId: "1:509686302807:web:7a73181d53f7ca22363b12"
     };
 
-    console.log("2. Firebase 초기화 시도");
     firebase.initializeApp(firebaseConfig);
-    console.log("3. Firebase 앱 개수:", firebase.apps.length);
-
     const db = firebase.database();
-    console.log("4. DB 객체 생성 완료");
 
     document.getElementById('sendBtn').addEventListener('click', () => {
       const msg = document.getElementById('msg').value.trim();
-      console.log("5. 버튼 클릭 감지, 입력:", msg);
       if (!msg) {
         alert("문장을 입력해주세요!");
         return;
       }
       db.ref('messages').push({ text: msg })
         .then(() => {
-          console.log("6. Firebase 전송 성공");
           document.getElementById('msg').value = '';
         })
-        .catch(err => console.error("7. 전송 오류:", err));
+        .catch(err => console.error("전송 오류:", err));
     });
   </script>
 </body>
 </html>
+
