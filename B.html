@@ -10,49 +10,48 @@
   <style>
     body {
       margin: 0;
-      background: linear-gradient(180deg, #ffffff, #f3f3f3);
+      background-image: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1920&q=80');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
       font-family: 'Noto Sans KR', sans-serif;
       position: relative;
+      color: #fff;
     }
 
-    /* 문장 박스 */
+    /* 문장 표시 박스 */
     #textContainer {
       width: 80%;
       height: 70%;
       font-size: 22px;
       line-height: 1.8;
-      color: #333;
       text-align: left;
       white-space: pre-wrap;
       overflow-y: auto;
-      padding: 24px;
-      background: rgba(255, 255, 255, 0.9);
+      padding: 24px 32px;
+      background: rgba(0, 0, 0, 0.35);
       border-radius: 16px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 30px rgba(0,0,0,0.3);
       transition: all 0.3s ease;
       position: relative;
     }
 
-    /* 여기에 추가 스타일을 이어서 작성하세요 */
-  </style>
-</head>
-<body>
-  <div id="textContainer"></div>
+    /* 오른쪽 상단 남은 문장 수 */
+    #counter {
+      position: absolute;
+      top: 14px;
+      right: 20px;
+      font-size: 16px;
+      color: rgba(255,255,255,0.9);
+      font-weight: 500;
+    }
 
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
-
-  <script>
-    /* JS는 이렇게 주석 처리 (// 단일 줄, 또는 /* ... *\/ 다중 줄) */
-  </script>
-</body>
-</html>
-
-
+    /* 스크롤바 디자인 */
+    #textContainer::-webkit-scrollbar {
+      width:
 
 
