@@ -7,43 +7,70 @@
     body {
       font-family: 'Noto Sans KR', sans-serif;
       margin: 0;
-      background-color: #f0f0f0;
+
+      /* ✅ 배경 이미지 (여기 URL만 바꾸면 원하는 사진으로 변경 가능) */
+      background-image: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1920&q=80');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
       height: 100vh;
+      color: #fff;
     }
 
     /* 남은 문장 수 */
     #counter {
       font-size: 18px;
       margin-bottom: 16px;
-      color: #333;
+      color: #ffffff;
       font-weight: 500;
+      text-shadow: 0 1px 6px rgba(0, 0, 0, 0.4);
     }
 
+    /* ✅ 반투명 텍스트 박스 */
     #textContainer {
       width: 80%;
       height: 70%;
-      background: white;
+      background: rgba(255, 255, 255, 0.7); /* ✅ 불투명도 70% (즉 30% 투명) */
       border-radius: 12px;
       padding: 24px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
       font-size: 20px;
       line-height: 1.6;
       overflow-y: auto;
       white-space: pre-wrap;
     }
+
+    /* 스크롤바 */
+    #textContainer::-webkit-scrollbar {
+      width: 8px;
+    }
+    #textContainer::-webkit-scrollbar-thumb {
+      background-color: rgba(0, 0, 0, 0.3);
+      border-radius: 4px;
+    }
+
+    /* 문장 스타일 */
+    .sentence {
+      display: inline;
+      font-weight: 500;
+      transition: color 0.3s ease;
+    }
   </style>
 </head>
 <body>
-  <!-- ✅ 남은 문장 수 표시 -->
   <div id="counter">이야기 완성까지 남은 문장 수 : 50</div>
 
-  <div id="textContainer">백설공주는 마녀가 건낸 탐스럽게 빨간 사과를 한입 크게 베어물었고, 마녀는 그런 공주를 보며 의미심장한 웃음을 짓고 있었다. </div>
+  <div id="textContainer">
+    백설공주는 마녀가 건넨 탐스럽게 빨간 사과를 한입 크게 베어물었고,  
+    마녀는 그런 공주를 보며 의미심장한 웃음을 짓고 있었다. 
+  </div>
 
-  <!-- ✅ Firebase SDK (CDN 방식) -->
+  <!-- ✅ Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
 
@@ -59,7 +86,6 @@
       appId: "1:509686302807:web:7a73181d53f7ca22363b12"
     };
 
-    // ✅ Firebase 초기화
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
     const container = document.getElementById('textContainer');
@@ -67,23 +93,35 @@
 
     let remaining = 50; // 초기 문장 수
 
-    // ✅ 실시간으로 새 문장 표시
+    // ✅ 부드러운 랜덤 색상 팔레트
+    const palette = [
+      '#f44336', '#2196f3', '#4caf50', '#ff9800', '#9c27b0',
+      '#03a9f4', '#8bc34a', '#ff5722', '#e91e63', '#00bcd4'
+    ];
+
+    // ✅ 실시간 문장 추가
     db.ref('messages').on('child_added', (snapshot) => {
       const data = snapshot.val();
       if (data && data.text) {
-        container.textContent += ' ' + data.text;
-        container.scrollTop = container.scrollHeight;
+        appendColoredText(data.text);
 
-        // ✅ 남은 문장 수 감소
         if (remaining > 0) {
           remaining--;
           counter.textContent = `이야기 완성까지 남은 문장 수 : ${remaining}`;
         }
-
-        console.log("📖 새 문장:", data.text);
       }
     });
+
+    // ✅ 문장을 랜덤 색상으로 표시
+    function appendColoredText(text) {
+      const span = document.createElement('span');
+      span.className = 'sentence';
+      span.textContent = text.trim() + ' ';
+      span.style.color = palette[Math.floor(Math.random() * palette.length)];
+
+      container.appendChild(span);
+      container.scrollTop = container.scrollHeight;
+    }
   </script>
 </body>
 </html>
-
