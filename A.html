@@ -11,34 +11,34 @@
       align-items: center;
       height: 100vh;
       margin: 0;
-      /* ✅ 여기를 바꾸면 배경이 바뀜 */
+
+      /* ✅ 선명한 배경 이미지 (불투명도 X) */
       background-image: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1920&q=80');
-      background-size: cover;      /* 화면 꽉 채우기 */
-      background-position: center; /* 이미지 가운데 맞추기 */
+      background-size: cover;
+      background-position: center;
       background-repeat: no-repeat;
-      backdrop-filter: blur(4px);  /* 살짝 흐림 효과 (선택사항) */
+
       font-family: 'Noto Sans KR', sans-serif;
     }
 
     h1 {
-      font-size: 28px;
+      font-size: 30px;
       font-weight: 700;
       margin-bottom: 40px;
-      color: #fff; /* 배경 위에서도 잘 보이도록 흰색 */
-      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+      color: #ffffff; /* 그림자 없이 깨끗한 흰색 */
     }
 
     input {
       width: 400px;
       font-size: 20px;
       padding: 14px 16px;
-      border: 2px solid #fff;
-      border-radius: 12px;
+      border: 2px solid #ffffff;
+      border-radius: 16px; /* ✅ 모서리 조금 더 둥글게 */
       outline: none;
       text-align: center;
       margin-bottom: 20px;
       background: rgba(255, 255, 255, 0.15);
-      color: #fff;
+      color: #ffffff;
       transition: 0.3s ease;
     }
 
@@ -52,64 +52,10 @@
 
     button {
       font-size: 20px;
-      padding: 12px 30px;
-      border-radius: 12px;
-      border: 3px solid #fff;
+      padding: 14px 36px;
+      border-radius: 20px; /* ✅ 훨씬 더 둥근 형태 */
+      border: 4px solid #ffffff; /* ✅ 테두리 조금 더 두껍게 */
       background: rgba(255, 255, 255, 0.15);
-      color: #fff;
+      color: #ffffff;
       cursor: pointer;
-      font-weight: 600;
-      transition: all 0.3s ease;
-      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
-    }
-
-    button:hover {
-      background: #fff;
-      color: #333;
-    }
-
-    button:active {
-      transform: scale(0.98);
-    }
-  </style>
-</head>
-<body>
-  <h1><strong>이야기의 다음 문장이 어떻게 이어질까요?</strong></h1>
-
-  <input type="text" id="msg" placeholder="여기에 문장을 입력하세요">
-  <button id="sendBtn">작성</button>
-
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
-
-  <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyDwMaWKl3EgBMMGKy5llg3OsscHbZOrhYo",
-      authDomain: "display1-2e379.firebaseapp.com",
-      databaseURL: "https://display1-2e379-default-rtdb.europe-west1.firebasedatabase.app",
-      projectId: "display1-2e379",
-      storageBucket: "display1-2e379.firebasestorage.appspot.com",
-      messagingSenderId: "509686302807",
-      appId: "1:509686302807:web:7a73181d53f7ca22363b12"
-    };
-
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
-
-    document.getElementById('sendBtn').addEventListener('click', () => {
-      const msg = document.getElementById('msg').value.trim();
-      if (!msg) {
-        alert("문장을 입력해주세요!");
-        return;
-      }
-      db.ref('messages').push({ text: msg })
-        .then(() => {
-          document.getElementById('msg').value = '';
-        })
-        .catch(err => console.error("전송 오류:", err));
-    });
-  </script>
-</body>
-</html>
 
