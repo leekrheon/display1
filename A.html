@@ -27,29 +27,29 @@
       padding: 0 20px;
     }
 
-    /* ✅ 제목: 2줄, 가운데 정렬 */
+    /* ✅ 제목 (2줄 중앙 정렬, 더 큼직하게) */
     h1 {
-      font-size: 2.6rem; /* 모바일에서도 크게 */
+      font-size: 3.4rem; /* 기존 2.6rem → 확대 */
       font-weight: 600;
-      margin-bottom: 50px;
-      line-height: 1.3;
-      white-space: pre-line; /* 줄바꿈 적용 */
+      margin-bottom: 60px;
+      line-height: 1.4;
+      white-space: pre-line;
       text-align: center;
       color: #ffffff;
     }
 
     /* ✅ 입력창 */
     input {
-      width: 80vw; /* 화면 비율에 맞게 */
-      max-width: 480px;
-      font-size: 1.3rem;
-      padding: 16px 20px;
-      border: 2px solid #ffffff;
-      border-radius: 35px;
+      width: 85vw;
+      max-width: 520px;
+      font-size: 1.6rem; /* 기존 1.3rem → 확대 */
+      padding: 22px 26px; /* 터치하기 쉽게 패딩 확대 */
+      border: 3px solid #ffffff;
+      border-radius: 40px;
       outline: none;
       text-align: center;
-      margin-bottom: 24px;
-      background: rgba(255, 255, 255, 0.15);
+      margin-bottom: 28px;
+      background: rgba(255, 255, 255, 0.18);
       color: #ffffff;
       transition: 0.3s ease;
       font-family: 'Diphylleia', serif;
@@ -57,20 +57,20 @@
 
     input::placeholder {
       color: rgba(255, 255, 255, 0.6);
-      font-size: 1.2rem;
+      font-size: 1.4rem;
     }
 
     input:focus {
-      background: rgba(255, 255, 255, 0.25);
+      background: rgba(255, 255, 255, 0.28);
     }
 
     /* ✅ 버튼 */
     button {
       font-family: 'Diphylleia', serif;
-      font-size: 1.4rem;
-      padding: 16px 40px;
-      border-radius: 40px;
-      border: 3px solid #ffffff;
+      font-size: 1.8rem; /* 기존 1.4rem → 확대 */
+      padding: 20px 52px;
+      border-radius: 45px;
+      border: 4px solid #ffffff;
       background: rgba(255, 255, 255, 0.15);
       color: #ffffff;
       cursor: pointer;
@@ -87,19 +87,19 @@
       transform: scale(0.97);
     }
 
-    /* ✅ 반응형 (더 작은 모바일 대응) */
+    /* ✅ 반응형: 작은 모바일에서도 적절히 조정 */
     @media (max-width: 600px) {
       h1 {
-        font-size: 2rem;
-        margin-bottom: 40px;
+        font-size: 2.6rem;
+        margin-bottom: 45px;
       }
       input {
-        font-size: 1.1rem;
-        padding: 14px;
+        font-size: 1.3rem;
+        padding: 18px;
       }
       button {
-        font-size: 1.2rem;
-        padding: 14px 32px;
+        font-size: 1.5rem;
+        padding: 18px 40px;
       }
     }
   </style>
