@@ -25,7 +25,8 @@
       font-size: 30px;
       font-weight: 700;
       margin-bottom: 40px;
-      color: #ffffff; /* 그림자 없이 깨끗한 흰색 */
+      color: #ffffff; /* ✅ 그림자 없이 깨끗한 흰색 */
+      text-shadow: none;
     }
 
     input {
@@ -53,9 +54,72 @@
     button {
       font-size: 20px;
       padding: 14px 36px;
-      border-radius: 20px; /* ✅ 훨씬 더 둥근 형태 */
+      border-radius: 22px; /* ✅ 훨씬 더 둥근 형태 */
       border: 4px solid #ffffff; /* ✅ 테두리 조금 더 두껍게 */
-      background: rgba(255, 255, 255, 0.15);
+      background: rgba(255, 255, 255, 0.1);
       color: #ffffff;
       cursor: pointer;
+      font-weight: 600;
+      transition: all 0.25s ease;
+    }
 
+    button:hover {
+      background: #ffffff;
+      color: #333333;
+    }
+
+    button:active {
+      transform: scale(0.97);
+    }
+  </style>
+</head>
+<body>
+  <h1><strong>이야기의 다음 문장이 어떻게 이어질까요?</strong></h1>
+
+  <input type="text" id="msg" placeholder="여기에 문장을 입력하세요">
+  <button id="sendBtn">작성</button>
+
+  <!-- ✅ Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDwMaWKl3EgBMMGKy5llg3OsscHbZOrhYo",
+      authDomain: "display1-2e379.firebaseapp.com",
+      databaseURL: "https://display1-2e379-default-rtdb.europe-west1.firebasedatabase.app",
+      projectId: "display1-2e379",
+      storageBucket: "display1-2e379.firebasestorage.appspot.com",
+      messagingSenderId: "509686302807",
+      appId: "1:509686302807:web:7a73181d53f7ca22363b12"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    // 버튼 클릭 시 Firebase에 문장 저장
+    document.getElementById('sendBtn').addEventListener('click', sendMessage);
+
+    // Enter 키로도 전송 가능하도록
+    document.getElementById('msg').addEventListener('keypress', function(event) {
+      if (event.key === 'Enter') {
+        sendMessage();
+      }
+    });
+
+    function sendMessage() {
+      const msg = document.getElementById('msg').value.trim();
+      if (!msg) {
+        alert("문장을 입력해주세요!");
+        return;
+      }
+
+      db.ref('messages').push({ text: msg })
+        .then(() => {
+          document.getElementById('msg').value = '';
+        })
+        .catch(err => console.error("전송 오류:", err));
+    }
+  </script>
+</body>
+</html>
