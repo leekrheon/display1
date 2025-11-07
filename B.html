@@ -3,12 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <title>생각의 흐름</title>
+
+  <!-- ✅ Diphylleia 폰트 적용 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Diphylleia&display=swap" rel="stylesheet">
+
   <style>
     body {
-      font-family: 'Noto Sans KR', sans-serif;
+      font-family: 'Diphylleia', serif; /* ✅ 폰트 변경 완료 */
       margin: 0;
 
-      /* ✅ 배경 이미지 (여기 URL만 바꾸면 원하는 사진으로 변경 가능) */
+      /* ✅ 배경 이미지 (원하는 사진으로 교체 가능) */
       background-image: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1920&q=80');
       background-size: cover;
       background-position: center;
@@ -16,20 +22,20 @@
 
       display: flex;
       flex-direction: column;
-      justify-content: flex-start;  /* ✅ 위쪽 기준에서 살짝 내려오기 */
+      justify-content: flex-start;
       align-items: center;
       height: 100vh;
       color: #fff;
-      padding-top: 40px; /* ✅ 전체를 조금 아래로 내림 */
+      padding-top: 40px; /* ✅ 전체를 살짝 아래로 내림 */
     }
 
     /* 남은 문장 수 */
     #counter {
-      font-size: 22px;          /* ✅ 폰트 크기 살짝 키움 */
+      font-size: 22px;
       margin-bottom: 20px;
       color: #ffffff;
       font-weight: 600;
-      text-shadow: none;        /* ✅ 그림자 제거 */
+      text-shadow: none; /* ✅ 그림자 제거 */
     }
 
     /* ✅ 반투명 텍스트 박스 */
@@ -43,7 +49,8 @@
       font-size: 20px;
       line-height: 1.8;
       overflow-y: auto;
-      word-wrap: break-word; /* ✅ 긴 문장도 줄 안 깨지고 자연스럽게 */
+      word-wrap: break-word;
+      color: #222; /* ✅ 본문은 어두운 회색으로 가독성 향상 */
     }
 
     /* 스크롤바 */
@@ -67,8 +74,8 @@
   <div id="counter">이야기 완성까지 남은 문장 수 : 50</div>
 
   <div id="textContainer">
-    백설공주는 마녀가 건넨 탐스럽게 빨간 사과를 한입 크게 베어물었고, 
-    마녀는 그런 공주를 보며 의미심장한 웃음을 짓고 있었다. 
+    백설공주는 마녀가 건넨 탐스럽게 빨간 사과를 한입 크게 베어물었고,
+    마녀는 그런 공주를 보며 의미심장한 웃음을 짓고 있었다.
   </div>
 
   <!-- ✅ Firebase SDK -->
@@ -92,9 +99,9 @@
     const container = document.getElementById('textContainer');
     const counter = document.getElementById('counter');
 
-    let remaining = 50; // 초기 문장 수
+    let remaining = 50;
 
-    // ✅ 부드러운 랜덤 색상 팔레트
+    // ✅ 랜덤 색상 팔레트
     const palette = [
       '#f44336', '#2196f3', '#4caf50', '#ff9800', '#9c27b0',
       '#03a9f4', '#8bc34a', '#ff5722', '#e91e63', '#00bcd4'
@@ -105,7 +112,6 @@
       const data = snapshot.val();
       if (data && data.text) {
         appendColoredText(data.text);
-
         if (remaining > 0) {
           remaining--;
           counter.textContent = `이야기 완성까지 남은 문장 수 : ${remaining}`;
@@ -117,7 +123,7 @@
     function appendColoredText(text) {
       const span = document.createElement('span');
       span.className = 'sentence';
-      span.textContent = text.trim() + ' '; // ✅ 띄어쓰기 포함
+      span.textContent = text.trim() + ' ';
       span.style.color = palette[Math.floor(Math.random() * palette.length)];
       container.appendChild(span);
       container.scrollTop = container.scrollHeight;
@@ -125,3 +131,4 @@
   </script>
 </body>
 </html>
+
