@@ -16,8 +16,10 @@
       align-items: center;
       height: 100vh;
       font-family: 'Noto Sans KR', sans-serif;
+      position: relative;
     }
 
+    /* 문장 박스 */
     #textContainer {
       width: 80%;
       height: 70%;
@@ -32,72 +34,10 @@
       border-radius: 16px;
       box-shadow: 0 4px 20px rgba(0,0,0,0.1);
       transition: all 0.3s ease;
+      position: relative;
     }
 
-    #textContainer::-webkit-scrollbar {
-      width: 8px;
-    }
-    #textContainer::-webkit-scrollbar-thumb {
-      background-color: rgba(0,0,0,0.2);
-      border-radius: 4px;
-    }
+    /
 
-    .sentence {
-      opacity: 0;
-      animation: fadeIn 1s ease forwards;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-  </style>
-</head>
-<body>
-  <div id="textContainer"></div>
-
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
-
-  <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyDwMaWKl3EgBMMGKy5llg3OsscHbZOrhYo",
-      authDomain: "display1-2e379.firebaseapp.com",
-      databaseURL: "https://display1-2e379-default-rtdb.europe-west1.firebasedatabase.app",
-      projectId: "display1-2e379",
-      storageBucket: "display1-2e379.firebasestorage.appspot.com",
-      messagingSenderId: "509686302807",
-      appId: "1:509686302807:web:7a73181d53f7ca22363b12"
-    };
-
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
-    const container = document.getElementById('textContainer');
-
-    // 🌈 부드러운 랜덤 색상 팔레트
-    const palette = [
-      '#2b7de9', '#ed5a64', '#f29c2b', '#41a36d', '#7a5de8',
-      '#ffb347', '#009688', '#f06292', '#64b5f6', '#9ccc65'
-    ];
-
-    db.ref('messages').on('child_added', snapshot => {
-      const data = snapshot.val();
-      if (data && data.text) appendColoredText(data.text);
-    });
-
-    // 문장을 이어붙이면서 색 랜덤 적용
-    function appendColoredText(text) {
-      const span = document.createElement('span');
-      span.className = 'sentence';
-      span.textContent = text.trim() + ' ';
-      span.style.color = palette[Math.floor(Math.random() * palette.length)];
-
-      container.appendChild(span);
-      container.scrollTop = container.scrollHeight;
-    }
-  </script>
-</body>
-</html>
 
 
