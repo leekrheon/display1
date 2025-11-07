@@ -2,19 +2,18 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>생각의 흐름</title>
+  <title>생각의 흐름 - 원고지 버전</title>
 
-  <!-- ✅ 두 폰트 불러오기 -->
+  <!-- ✅ 폰트 -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Diphylleia&family=Song+Myung&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Diphylleia&display=swap" rel="stylesheet">
 
   <style>
     body {
-      font-family: 'Diphylleia', serif; /* ✅ 기본 폰트: Diphylleia */
+      font-family: 'Diphylleia', serif;
       margin: 0;
 
-      /* ✅ 배경 이미지 (원하는 사진으로 교체 가능) */
       background-image: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1920&q=80');
       background-size: cover;
       background-position: center;
@@ -26,32 +25,38 @@
       align-items: center;
       height: 100vh;
       color: #fff;
-      padding-top: 40px; /* ✅ 전체를 살짝 아래로 내림 */
+      padding-top: 40px;
     }
 
-    /* 남은 문장 수 */
+    /* 상단 카운터 */
     #counter {
-      font-family: 'Song Myung', serif; /* ✅ 상단 카운터는 Song Myung */
       font-size: 22px;
       margin-bottom: 20px;
       color: #ffffff;
       font-weight: 600;
-      text-shadow: none;
     }
 
-    /* ✅ 반투명 텍스트 박스 */
+    /* ✅ 원고지 느낌의 텍스트 박스 */
     #textContainer {
+      position: relative;
       width: 80%;
       height: 70%;
-      background: rgba(255, 255, 255, 0.7); /* ✅ 불투명도 70% */
+      background: rgba(255, 255, 255, 0.85);
       border-radius: 12px;
-      padding: 24px;
       box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+      padding: 30px 35px;
       font-size: 20px;
       line-height: 1.9;
       overflow-y: auto;
+      color: #222;
       word-wrap: break-word;
-      color: #222; /* ✅ 어두운 회색으로 가독성 향상 */
+
+      /* ✅ 원고지 배경 (격자무늬) */
+      background-image:
+        linear-gradient(to right, rgba(0, 0, 0, 0.08) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(0, 0, 0, 0.08) 1px, transparent 1px);
+      background-size: 28px 28px; /* 칸 크기 */
+      background-position: 15px 15px;
     }
 
     /* 스크롤바 */
@@ -65,9 +70,15 @@
 
     /* 문장 스타일 */
     .sentence {
-      display: inline; /* ✅ 줄바꿈 없이 이어지게 */
+      display: inline;
       font-weight: 500;
-      transition: color 0.3s ease;
+      transition: color 0.3s ease, opacity 0.8s ease;
+      opacity: 0;
+      animation: fadeIn 1s ease forwards; /* ✅ 부드럽게 나타남 */
+    }
+
+    @keyframes fadeIn {
+      to { opacity: 1; }
     }
   </style>
 </head>
@@ -84,7 +95,6 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
 
   <script>
-    // ✅ Firebase 설정
     const firebaseConfig = {
       apiKey: "AIzaSyDwMaWKl3EgBMMGKy5llg3OsscHbZOrhYo",
       authDomain: "display1-2e379.firebaseapp.com",
@@ -102,13 +112,11 @@
 
     let remaining = 50;
 
-    // ✅ 랜덤 색상 팔레트
     const palette = [
       '#f44336', '#2196f3', '#4caf50', '#ff9800', '#9c27b0',
       '#03a9f4', '#8bc34a', '#ff5722', '#e91e63', '#00bcd4'
     ];
 
-    // ✅ 실시간 문장 추가
     db.ref('messages').on('child_added', (snapshot) => {
       const data = snapshot.val();
       if (data && data.text) {
@@ -120,7 +128,6 @@
       }
     });
 
-    // ✅ 문장을 랜덤 색상으로 표시
     function appendColoredText(text) {
       const span = document.createElement('span');
       span.className = 'sentence';
