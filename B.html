@@ -9,61 +9,19 @@
       margin: 0;
       background-color: #f0f0f0;
       display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
       height: 100vh;
     }
 
+    /* 남은 문장 수 */
+    #counter {
+      font-size: 18px;
+      margin-bottom: 16px;
+      color: #333;
+      font-weight: 500;
+    }
+
     #textContainer {
       width: 80%;
-      height: 70%;
-      background: white;
-      border-radius: 12px;
-      padding: 24px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      font-size: 20px;
-      line-height: 1.6;
-      overflow-y: auto;
-      white-space: pre-wrap;
-    }
-  </style>
-</head>
-<body>
-  <div id="textContainer">문장이 여기에 순서대로 표시됩니다...</div>
-
-  <!-- ✅ Firebase SDK (CDN 방식) -->
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
-
-  <script>
-    // ✅ Firebase 설정
-    const firebaseConfig = {
-      apiKey: "AIzaSyDwMaWKl3EgBMMGKy5llg3OsscHbZOrhYo",
-      authDomain: "display1-2e379.firebaseapp.com",
-      databaseURL: "https://display1-2e379-default-rtdb.europe-west1.firebasedatabase.app",
-      projectId: "display1-2e379",
-      storageBucket: "display1-2e379.firebasestorage.appspot.com",
-      messagingSenderId: "509686302807",
-      appId: "1:509686302807:web:7a73181d53f7ca22363b12"
-    };
-
-    // ✅ Firebase 초기화
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
-    const container = document.getElementById('textContainer');
-
-    // ✅ 실시간으로 새 문장 표시
-    db.ref('messages').on('child_added', (snapshot) => {
-      const data = snapshot.val();
-      if (data && data.text) {
-        container.textContent += ' ' + data.text;
-        container.scrollTop = container.scrollHeight;
-        console.log("📖 새 문장:", data.text);
-      }
-    });
-  </script>
-</body>
-</html>
-
-
-
