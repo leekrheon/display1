@@ -7,7 +7,7 @@
     body {
       font-family: 'Noto Sans KR', sans-serif;
       margin: 0;
-      background-color: #fafafa;
+      background-color: #f0f0f0;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -26,21 +26,12 @@
       overflow-y: auto;
       white-space: pre-wrap;
     }
-
-    /* 스크롤바 */
-    #textContainer::-webkit-scrollbar {
-      width: 8px;
-    }
-    #textContainer::-webkit-scrollbar-thumb {
-      background-color: rgba(0,0,0,0.3);
-      border-radius: 4px;
-    }
   </style>
 </head>
 <body>
   <div id="textContainer">문장이 여기에 순서대로 표시됩니다...</div>
 
-  <!-- Firebase SDK -->
+  <!-- ✅ Firebase SDK (CDN 방식) -->
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
 
@@ -61,17 +52,18 @@
     const db = firebase.database();
     const container = document.getElementById('textContainer');
 
-    // ✅ 실시간으로 새 문장 감지
+    // ✅ 실시간으로 새 문장 표시
     db.ref('messages').on('child_added', (snapshot) => {
       const data = snapshot.val();
       if (data && data.text) {
-        appendSentence(data.text);
+        container.textContent += ' ' + data.text;
+        container.scrollTop = container.scrollHeight;
+        console.log("📖 새 문장:", data.text);
       }
     });
-
-    // ✅ 화면에 문장 이어붙이기
-    function appendSentence(text) {
-      container.textCo
+  </script>
+</body>
+</html>
 
 
 
