@@ -25,7 +25,7 @@
     position: relative;
   }
 
-  /* 상단 카운터 */
+  /* 상단 카운터 ONLY (페이지1 텍스트 제거됨) */
   #counterBox {
     position: absolute;
     top: 40px;
@@ -36,12 +36,6 @@
     font-weight: 600;
   }
 
-  #pageNumber {
-    margin-top: 5px;
-    font-size: 18px;
-    opacity: 0.9;
-  }
-
   /* 원고지 */
   #textContainer {
     font-family: 'Song Myung', serif;
@@ -49,19 +43,23 @@
     height: 70%;
     padding: 30px 35px;
     border-radius: 12px;
-    background-color: rgba(255,255,255,0.85);
+
+    /* 🔥 더 불투명하고 흰색으로 */
+    background-color: rgba(255,255,255,0.95);
+
     color: #222;
     font-size: 20px;
     line-height: 32px;
     overflow-y: auto;
     box-shadow: 0 0 25px rgba(0,0,0,0.25);
 
+    /* 🔥 더 진한 붉은 줄 */
     background:
-      linear-gradient(to bottom, rgba(150,20,20,0.45) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(150,20,20,0.55) 1px, transparent 1px),
       url('https://www.transparenttextures.com/patterns/paper-fibers.png');
     background-size: 100% 32px, 400px 400px;
 
-    animation: fadeInPage 1s ease forwards;
+    animation: fadeInPage 0.7s ease forwards;
   }
 
   @keyframes fadeInPage {
@@ -71,66 +69,80 @@
 
   /* 페이지 전환 애니메이션 */
   .slideLeft {
-    animation: slideLeft 0.6s ease forwards;
+    animation: slideLeft 0.5s ease forwards;
   }
   @keyframes slideLeft {
-    from { transform: translateX(100%); opacity: 0; }
+    from { transform: translateX(80%); opacity: 0; }
     to { transform: translateX(0); opacity: 1; }
   }
 
   .slideRight {
-    animation: slideRight 0.6s ease forwards;
+    animation: slideRight 0.5s ease forwards;
   }
   @keyframes slideRight {
-    from { transform: translateX(-100%); opacity: 0; }
+    from { transform: translateX(-80%); opacity: 0; }
     to { transform: translateX(0); opacity: 1; }
   }
 
-  /* 화살표 디자인 */
-  .arrow {
+  /* 공통 화살표 버튼 스타일 */
+  .arrowBtn {
     position: absolute;
     top: 50%;
-    font-size: 50px;
-    color: rgba(255,255,255,0.7);
-    cursor: pointer;
-    user-select: none;
     transform: translateY(-50%);
+    width: 48px;
+    height: 48px;
+    background-color: rgba(255,255,255,0.95);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    color: #333;
+    font-size: 26px;
+    cursor: pointer;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.25);
+    user-select: none;
     transition: 0.2s;
   }
-  .arrow:hover {
-    color: white;
-  }
-  #leftArrow { left: 5%; }
-  #rightArrow { right: 5%; }
 
-  /* 하단 페이지 상태 */
+  .arrowBtn:hover {
+    background-color: white;
+  }
+
+  /* 위치 조정 – 원고지와 겹치지 않도록 */
+  #leftArrow {
+    left: 4%;
+  }
+  #rightArrow {
+    right: 4%;
+  }
+
+  /* 페이지 표시 */
   #pageStatus {
     position: absolute;
     bottom: 20px;
-    font-size: 18px;
-    font-family: 'Diphylleia', serif;
+    font-size: 20px;
     color: white;
-    text-align: center;
+    font-family: 'Diphylleia', serif;
   }
 </style>
 
 </head>
 <body>
 
-<!-- 상단 카운터 -->
+<!-- 상단 카운터 (페이지 번호 삭제됨) -->
 <div id="counterBox">
   <div id="counter">이야기 완성까지 남은 문장 수 : 50</div>
-  <div id="pageNumber">페이지 1</div>
 </div>
 
 <!-- 좌우 화살표 -->
-<div id="leftArrow" class="arrow">⟵</div>
-<div id="rightArrow" class="arrow">⟶</div>
+<div id="leftArrow" class="arrowBtn">⟵</div>
+<div id="rightArrow" class="arrowBtn">⟶</div>
 
 <!-- 원고지 -->
 <div id="textContainer"></div>
 
-<!-- 페이지 상태 -->
+<!-- 페이지 현황 -->
 <div id="pageStatus">1/1</div>
 
 <!-- Firebase -->
@@ -138,7 +150,7 @@
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
 
 <script>
-/* Firebase 설정 */
+/* Firebase config */
 const firebaseConfig = {
   apiKey: "AIzaSyDwMaWKl3EgBMMGKy5llg3OsscHbZOrhYo",
   authDomain: "display1-2e379.firebaseapp.com",
@@ -152,63 +164,61 @@ firebase.initializeApp(firebaseConfig);
 
 const db = firebase.database();
 
-/* 상태 변수 */
+/* 상태 */
 let remaining = 50;
 let currentPage = 1;
 let totalPages = 1;
 
-/* 페이지별 내용 저장 */
-let pages = {
-  1: "" 
-};
+/* 페이지 저장 */
+let pages = { 1: "" };
 
 /* 기본 문장 */
 const baseSentence =
-  "백설공주는 마녀가 건넨 탐스럽게 빨간 사과를 한입 크게 베어물었고, 마녀는 그런 공주를 보며 의미심장한 웃음을 짓고 있었다.";
+"백설공주는 마녀가 건넨 탐스럽게 빨간 사과를 한입 크게 베어물었고, 마녀는 그런 공주를 보며 의미심장한 웃음을 짓고 있었다.";
 
 /* 요소 */
 const container = document.getElementById("textContainer");
 const counter = document.getElementById("counter");
-const pageNumber = document.getElementById("pageNumber");
-const pageStatus = document.getElementById("pageStatus");
 const leftArrow = document.getElementById("leftArrow");
 const rightArrow = document.getElementById("rightArrow");
+const pageStatus = document.getElementById("pageStatus");
 
-/* 초기 페이지 설정 */
+/* 초기 세팅 */
 pages[1] = baseSentence + " ";
 renderPage();
 
-/* 문장 이어붙이기 */
+/* 줄글 이어쓰기 */
 function appendSentence(text) {
   pages[currentPage] += text.trim() + " ";
   renderPage();
 }
 
 /* 페이지 렌더링 */
-function renderPage(animationClass = "fadeInPage") {
+function renderPage(animation = "fadeInPage") {
   container.className = "";
   void container.offsetWidth;
 
-  container.classList.add(animationClass);
+  container.classList.add(animation);
   container.textContent = pages[currentPage];
 
-  pageNumber.textContent = `페이지 ${currentPage}`;
   pageStatus.textContent = `${currentPage}/${totalPages}`;
 }
 
-/* 새로운 페이지 생성 */
+/* 새 페이지 생성 */
 function createNewPage() {
   currentPage++;
   totalPages++;
+
   pages[currentPage] = baseSentence + " ";
   remaining = 50;
+
   counter.textContent = "이야기 완성까지 남은 문장 수 : 50";
   renderPage("slideLeft");
 }
 
-/* Firebase 새로운 문장 올 때 */
-db.ref("messages").on("child_added", snapshot => {
-  const data = snapshot.val();
+/* Firebase 입력 감지 */
+db.ref("messages").on("child_added", snap => {
+  const data = snap.val();
   if (!data || !data.text) return;
 
   appendSentence(data.text);
@@ -219,7 +229,7 @@ db.ref("messages").on("child_added", snapshot => {
   if (remaining <= 0) createNewPage();
 });
 
-/* 왼쪽 화살표 클릭 */
+/* 왼쪽 화살표 */
 leftArrow.addEventListener("click", () => {
   if (currentPage === 1) {
     alert("이야기의 첫 페이지입니다");
@@ -229,7 +239,7 @@ leftArrow.addEventListener("click", () => {
   renderPage("slideRight");
 });
 
-/* 오른쪽 화살표 클릭 */
+/* 오른쪽 화살표 */
 rightArrow.addEventListener("click", () => {
   if (currentPage === totalPages) {
     alert("아직 이야기가 완성되지 않았어요!");
