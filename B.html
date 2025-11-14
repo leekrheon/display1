@@ -44,11 +44,12 @@
     padding: 30px 35px;
     border-radius: 12px;
 
+    /* 원래 질감 + 더 어두운 붉은 줄 */
     background:
       linear-gradient(to bottom, rgba(150,20,20,0.45) 1px, transparent 1px),
       url('https://www.transparenttextures.com/patterns/paper-fibers.png');
     background-size: 100% 32px, 400px 400px;
-    background-attachment: local; /* 줄과 내용 동기화 */
+    background-attachment: local; /* 스크롤 동기화 */
 
     background-color: rgba(255,255,255,0.85);
 
@@ -76,7 +77,7 @@
     to   { transform: translateX(0); opacity: 1;}
   }
 
-  /* 화살표 버튼 */
+  /* 화살표 버튼 더 작게 + 더 바깥쪽 */
   .arrowBtn {
     position: absolute;
     top: 50%;
@@ -103,7 +104,7 @@
 
   .arrowBtn:hover { background-color: white; }
 
-  /* 페이지 상태 */
+  /* 하단 페이지 상태 */
   #pageStatus {
     position: absolute;
     bottom: 20px;
@@ -111,8 +112,8 @@
     color: white;
     font-family: 'Diphylleia', serif;
   }
-</style>
 
+</style>
 </head>
 <body>
 
@@ -128,7 +129,7 @@
 <!-- 원고지 -->
 <div id="textContainer"></div>
 
-<!-- 페이지 상태 -->
+<!-- 하단 페이지 표시 -->
 <div id="pageStatus">1/1</div>
 
 <!-- Firebase -->
@@ -136,7 +137,7 @@
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
 
 <script>
-/* Firebase config */
+/* Firebase 설정 */
 const firebaseConfig = {
   apiKey: "AIzaSyDwMaWKl3EgBMMGKy5llg3OsscHbZOrhYo",
   authDomain: "display1-2e379.firebaseapp.com",
@@ -148,21 +149,24 @@ const firebaseConfig = {
 };
 firebase.initializeApp(firebaseConfig);
 
-/* 상태 */
+/* 상태 변수 */
 let remaining = 50;
 let currentPage = 1;
 let totalPages = 1;
+
+/* 페이지별 HTML 저장 */
 let pages = { 1: "" };
 
 /* 기본 문장 */
 const baseSentence =
 "백설공주는 마녀가 건넨 탐스럽게 빨간 사과를 한입 크게 베어물었고, 마녀는 그런 공주를 보며 의미심장한 웃음을 짓고 있었다.";
 
+/* DOM */
 const container = document.getElementById("textContainer");
 const counter = document.getElementById("counter");
+const pageStatus = document.getElementById("pageStatus");
 const leftArrow = document.getElementById("leftArrow");
 const rightArrow = document.getElementById("rightArrow");
-const pageStatus = document.getElementById("pageStatus");
 
 /* 🎨 잉크 색상 7종 */
 const inkColors = [
@@ -177,7 +181,7 @@ const inkColors = [
 
 let lastColor = null;
 
-/* 랜덤 잉크 색 (직전 색과 다른 색만) */
+/* 랜덤 잉크 색 (직전 색 제외) */
 function getInkColor() {
   let c = inkColors[Math.floor(Math.random() * inkColors.length)];
   while (c === lastColor) {
@@ -187,23 +191,26 @@ function getInkColor() {
   return c;
 }
 
-/* 초기 페이지 */
-pages[1] = baseSentence + " ";
+/* 첫 페이지 기본 문장 삽입 */
+pages[1] = `<span style="color:${getInkColor()}">${baseSentence} </span>`;
 renderPage();
 
-/* 이어쓰기 */
+/* 문장 추가 (span + 랜덤 잉크) */
 function appendSentence(text) {
-  container.style.color = getInkColor(); // 문장마다 색 변경
-  pages[currentPage] += text.trim() + " ";
+  const color = getInkColor();
+  const span = `<span style="color:${color}">${text.trim()} </span>`;
+  pages[currentPage] += span;
   renderPage();
 }
 
 /* 페이지 렌더링 */
-function renderPage(animation = "fadeInPage") {
+function renderPage(animation = "") {
   container.className = "";
   void container.offsetWidth;
-  container.classList.add(animation);
-  container.textContent = pages[currentPage];
+
+  if (animation) container.classList.add(animation);
+
+  container.innerHTML = pages[currentPage];
   pageStatus.textContent = `${currentPage}/${totalPages}`;
 }
 
@@ -211,18 +218,22 @@ function renderPage(animation = "fadeInPage") {
 function createNewPage() {
   currentPage++;
   totalPages++;
-  pages[currentPage] = baseSentence + " ";
+
+  pages[currentPage] = `<span style="color:${getInkColor()}">${baseSentence} </span>`;
+
   remaining = 50;
   counter.textContent = "이야기 완성까지 남은 문장 수 : 50";
+
   renderPage("slideLeft");
 }
 
-/* Firebase 입력 */
-firebase.database().ref("messages").on("child_added", snap => {
-  const data = snap.val();
+/* Firebase 실시간 문장 추가 */
+firebase.database().ref("messages").on("child_added", snapshot => {
+  const data = snapshot.val();
   if (!data || !data.text) return;
 
   appendSentence(data.text);
+
   remaining--;
   counter.textContent = `이야기 완성까지 남은 문장 수 : ${remaining}`;
 
