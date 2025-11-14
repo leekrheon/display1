@@ -36,7 +36,7 @@
     text-align: right;
   }
 
-  /* 원고지 (예전 디자인 복원!) */
+  /* 원고지 */
   #textContainer {
     font-family: 'Song Myung', serif;
     width: 80%;
@@ -44,13 +44,12 @@
     padding: 30px 35px;
     border-radius: 12px;
 
-    /* ✔ 원래 있던 종이 질감 */
     background:
-      linear-gradient(to bottom, rgba(150,20,20,0.45) 1px, transparent 1px),   /* ← 더 어두운 붉은 줄 */
+      linear-gradient(to bottom, rgba(150,20,20,0.45) 1px, transparent 1px),
       url('https://www.transparenttextures.com/patterns/paper-fibers.png');
     background-size: 100% 32px, 400px 400px;
+    background-attachment: local; /* 줄과 내용 동기화 */
 
-    /* ✔ 원래 투명도 복원 */
     background-color: rgba(255,255,255,0.85);
 
     color: #222;
@@ -58,12 +57,6 @@
     line-height: 32px;
     overflow-y: auto;
     box-shadow: 0 0 25px rgba(0,0,0,0.25);
-    animation: fadeInPage 0.7s ease forwards;
-  }
-
-  @keyframes fadeInPage {
-    from { opacity: 0; transform: translateY(20px);}
-    to { opacity: 1; transform: translateY(0);}
   }
 
   /* 페이지 이동 애니메이션 */
@@ -83,38 +76,34 @@
     to   { transform: translateX(0); opacity: 1;}
   }
 
-  /* 원 안의 화살표 버튼 */
+  /* 화살표 버튼 */
   .arrowBtn {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    width: 48px;
-    height: 48px;
+    width: 40px;
+    height: 40px;
     background-color: rgba(255,255,255,0.95);
     border-radius: 50%;
-
     display: flex;
     justify-content: center;
     align-items: center;
 
-    /* ✔ 화살표 정중앙 위치하도록 조정 */
-    padding-bottom: 3px;
+    padding-bottom: 2px; /* 화살표 정중앙 */
 
     color: #333;
-    font-size: 22px;
+    font-size: 18px;
     cursor: pointer;
     box-shadow: 0 3px 10px rgba(0,0,0,0.25);
     transition: 0.2s;
   }
 
-  .arrowBtn:hover {
-    background-color: white;
-  }
+  #leftArrow { left: 2%; }
+  #rightArrow { right: 2%; }
 
-  #leftArrow { left: 4%; }
-  #rightArrow { right: 4%; }
+  .arrowBtn:hover { background-color: white; }
 
-  /* 페이지 표시 */
+  /* 페이지 상태 */
   #pageStatus {
     position: absolute;
     bottom: 20px;
@@ -136,7 +125,7 @@
 <div id="leftArrow" class="arrowBtn">⟵</div>
 <div id="rightArrow" class="arrowBtn">⟶</div>
 
-<!-- 원고지 (본문) -->
+<!-- 원고지 -->
 <div id="textContainer"></div>
 
 <!-- 페이지 상태 -->
@@ -175,12 +164,36 @@ const leftArrow = document.getElementById("leftArrow");
 const rightArrow = document.getElementById("rightArrow");
 const pageStatus = document.getElementById("pageStatus");
 
-/* 초기 페이지에 기본 문장 추가 */
+/* 🎨 잉크 색상 7종 */
+const inkColors = [
+  "#2C2A29",
+  "#3A2F2E",
+  "#2A3B4C",
+  "#4A2C47",
+  "#5A3E2B",
+  "#1E3A3A",
+  "#4D2B2B"
+];
+
+let lastColor = null;
+
+/* 랜덤 잉크 색 (직전 색과 다른 색만) */
+function getInkColor() {
+  let c = inkColors[Math.floor(Math.random() * inkColors.length)];
+  while (c === lastColor) {
+    c = inkColors[Math.floor(Math.random() * inkColors.length)];
+  }
+  lastColor = c;
+  return c;
+}
+
+/* 초기 페이지 */
 pages[1] = baseSentence + " ";
 renderPage();
 
 /* 이어쓰기 */
 function appendSentence(text) {
+  container.style.color = getInkColor(); // 문장마다 색 변경
   pages[currentPage] += text.trim() + " ";
   renderPage();
 }
@@ -200,7 +213,6 @@ function createNewPage() {
   totalPages++;
   pages[currentPage] = baseSentence + " ";
   remaining = 50;
-
   counter.textContent = "이야기 완성까지 남은 문장 수 : 50";
   renderPage("slideLeft");
 }
@@ -211,14 +223,13 @@ firebase.database().ref("messages").on("child_added", snap => {
   if (!data || !data.text) return;
 
   appendSentence(data.text);
-
   remaining--;
   counter.textContent = `이야기 완성까지 남은 문장 수 : ${remaining}`;
 
   if (remaining <= 0) createNewPage();
 });
 
-/* 화살표 동작 */
+/* 왼쪽 화살표 */
 leftArrow.addEventListener("click", () => {
   if (currentPage === 1) {
     alert("이야기의 첫 페이지입니다");
@@ -228,6 +239,7 @@ leftArrow.addEventListener("click", () => {
   renderPage("slideRight");
 });
 
+/* 오른쪽 화살표 */
 rightArrow.addEventListener("click", () => {
   if (currentPage === totalPages) {
     alert("아직 이야기가 완성되지 않았어요!");
