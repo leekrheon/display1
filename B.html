@@ -28,20 +28,20 @@
       position: relative;
     }
 
-    /* ✅ 상단 카운터 (오른쪽 정렬) */
+    /* ✅ 상단 카운터 */
     #counter {
       font-family: 'Diphylleia', serif;
       font-size: 22px;
       color: #ffffff;
       font-weight: 600;
       position: absolute;
-      top: 40px;        /* Y축 위치는 그대로 */
-      right: 10%;       /* X축 정렬 조정 */
+      top: 40px;
+      right: 10%;
       white-space: nowrap;
       text-align: right;
     }
 
-    /* ✅ 원고지 느낌의 텍스트 박스 (가로줄만) */
+    /* ✅ 원고지 박스 */
     #textContainer {
       font-family: 'Song Myung', serif;
       position: relative;
@@ -49,15 +49,17 @@
       height: 70%;
       border-radius: 12px;
       padding: 30px 35px;
+
+      /* 🔥 글자 크기 & 줄간격을 px 고정 */
       font-size: 20px;
-      line-height: 1.7;
+      line-height: 32px;
+
       overflow-y: auto;
       color: #222;
       word-wrap: break-word;
+      margin-top: 80px;
 
-      margin-top: 80px; /* ✅ 카운터와 겹치지 않도록 아래로 내림 */
-
-      /* ✅ 가로줄 + 질감 */
+      /* 🔥 원고지 가로줄을 글자 줄간격과 완전히 동일하게 설정 */
       background:
         linear-gradient(to bottom, rgba(170, 58, 58, 0.3) 1px, transparent 1px),
         url('https://www.transparenttextures.com/patterns/paper-fibers.png');
@@ -67,7 +69,7 @@
       box-shadow: 0 0 20px rgba(0, 0, 0, 0.25);
     }
 
-    /* 스크롤바 */
+    /* 스크롤바 디자인 */
     #textContainer::-webkit-scrollbar {
       width: 8px;
     }
@@ -76,12 +78,12 @@
       border-radius: 4px;
     }
 
-    /* 문장 스타일 */
+    /* 🔥 문장을 줄 단위로 정확히 출력 */
     .sentence {
-      display: inline;
+      display: block;  /* ← 원고지 줄과 완벽 정렬에 필수 */
       font-weight: 500;
-      transition: color 0.3s ease, opacity 0.8s ease;
       opacity: 0;
+      transition: color 0.3s ease, opacity 0.8s ease;
       animation: fadeIn 1s ease forwards;
     }
 
@@ -90,16 +92,18 @@
     }
   </style>
 </head>
+
 <body>
-  <!-- ✅ 카운터는 오른쪽 상단 -->
+  <!-- 상단 카운터 -->
   <div id="counter">이야기 완성까지 남은 문장 수 : 50</div>
 
+  <!-- 원고지 텍스트 박스 -->
   <div id="textContainer">
-    백설공주는 마녀가 건넨 탐스럽게 빨간 사과를 한입 크게 베어물었고,
-    마녀는 그런 공주를 보며 의미심장한 웃음을 짓고 있었다.
+    <span class="sentence">백설공주는 마녀가 건넨 탐스럽게 빨간 사과를 한입 크게 베어물었고,</span>
+    <span class="sentence">마녀는 그런 공주를 보며 의미심장한 웃음을 짓고 있었다.</span>
   </div>
 
-  <!-- ✅ Firebase SDK -->
+  <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
 
@@ -121,7 +125,7 @@
 
     let remaining = 50;
 
-    // ✅ 어두운 잉크 계열 색상
+    // 어두운 잉크 계열 색상 팔레트
     const palette = [
       '#3e2723', '#4a148c', '#1a237e', '#880e4f', '#263238',
       '#5d4037', '#6a1b9a', '#1565c0', '#b71c1c', '#37474f'
@@ -141,11 +145,13 @@
     function appendColoredText(text) {
       const span = document.createElement('span');
       span.className = 'sentence';
-      span.textContent = text.trim() + ' ';
+      span.textContent = text.trim();
       span.style.color = palette[Math.floor(Math.random() * palette.length)];
       container.appendChild(span);
       container.scrollTop = container.scrollHeight;
     }
   </script>
+
 </body>
 </html>
+
