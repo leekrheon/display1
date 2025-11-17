@@ -182,12 +182,12 @@ function getInkColor() {
 
 /* 문장 스타일 */
 function styledSentence(text) {
-  return `<span style="color:${getInkColor()}; font-weight:500;">${text.trim()} </span>`;
+  return `<span style="color:${getInkColor()}; font-weight:575;">${text.trim()} </span>`;
 }
 
 /* 🔥 첫 페이지는 검정색 */
 pages[1] =
-  `<span style="color:#000; font-weight:600;">${baseSentence}</span> `;
+  `<span style="color:#000; font-weight:575;">${baseSentence}</span> `;
 
 renderPage();
 
