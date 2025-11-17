@@ -36,7 +36,7 @@
     text-align: right;
   }
 
-  /* 원고지 */
+  /* ✔ 원고지 설정 (줄 간격 확대 + 배경 유지) */
   #textContainer {
     font-family: 'Song Myung', serif;
     width: 80%;
@@ -44,16 +44,22 @@
     padding: 30px 35px;
     border-radius: 12px;
 
+    /* 줄 간격 = 38px */
     background:
       linear-gradient(to bottom, rgba(180,60,60,0.4) 1px, transparent 1px),
       url('https://www.transparenttextures.com/patterns/paper-fibers.png');
-    background-size: 100% 32px, 400px 400px;
+    background-size: 100% 38px, 400px 400px;
+
     background-attachment: local;
     background-color: rgba(255,255,255,0.92);
 
     color: #222;
-    font-size: 20px;
-    line-height: 32px;
+
+    /* ✔ 폰트 크기 확대 */
+    font-size: 23px;
+
+    /* ✔ 줄 간격 확대 */
+    line-height: 38px;
 
     overflow-y: auto;
     box-shadow: 0 0 25px rgba(0,0,0,0.25);
@@ -153,25 +159,25 @@ const container = document.getElementById("textContainer");
 const counter = document.getElementById("counter");
 const pageStatus = document.getElementById("pageStatus");
 
-/* 🎨 더 밝은 잉크 색상 12종 */
+/* 🎨 밝은 잉크색 12종 */
 const inkColors = [
-  "#4A4A4A",  // Soft Black
-  "#A04A4A",  // Light Burgundy
-  "#B24C7A",  // Bright Wine Violet
-  "#2F5FA3",  // Blue Navy
-  "#3C8090",  // Teal Blue
-  "#2F7A67",  // Forest Green Light
-  "#4A6F8F",  // Slate Blue Light
-  "#7A3C98",  // Violet Indigo
-  "#A5633F",  // Milk Chocolate
-  "#2F8A83",  // Cyan Teal Light
-  "#7A4B35",  // Espresso Milk
-  "#3C4F7F"   // Midnight Blue Bright
+  "#4A4A4A",
+  "#A04A4A",
+  "#B24C7A",
+  "#2F5FA3",
+  "#3C8090",
+  "#2F7A67",
+  "#4A6F8F",
+  "#7A3C98",
+  "#A5633F",
+  "#2F8A83",
+  "#7A4B35",
+  "#3C4F7F"
 ];
 
 let lastColor = null;
 
-/* 직전과 다른 랜덤 잉크 선택 */
+/* 랜덤 컬러 (직전과 다르게) */
 function getInkColor() {
   let c = inkColors[Math.floor(Math.random() * inkColors.length)];
   while (c === lastColor) {
@@ -181,16 +187,18 @@ function getInkColor() {
   return c;
 }
 
-/* 첫 페이지 기본 문장 추가 */
-pages[1] =
-  `<span style="color:${getInkColor()}">${baseSentence} </span>`;
+/* ✔ 문장 텍스트만 굵게 (font-weight: 600) */
+function styledSentence(text) {
+  return `<span style="color:${getInkColor()}; font-weight:600;">${text.trim()} </span>`;
+}
+
+/* 첫 페이지 */
+pages[1] = styledSentence(baseSentence);
 renderPage();
 
 /* 문장 추가 */
 function appendSentence(text) {
-  const span =
-    `<span style="color:${getInkColor()}">${text.trim()} </span>`;
-  pages[currentPage] += span;
+  pages[currentPage] += styledSentence(text);
   renderPage();
 }
 
@@ -204,13 +212,12 @@ function renderPage(animation = "") {
   pageStatus.textContent = `${currentPage}/${totalPages}`;
 }
 
-/* 새 페이지 생성 */
+/* 새 페이지 */
 function createNewPage() {
   currentPage++;
   totalPages++;
 
-  pages[currentPage] =
-    `<span style="color:${getInkColor()}">${baseSentence} </span>`;
+  pages[currentPage] = styledSentence(baseSentence);
 
   remaining = 50;
   counter.textContent = "이야기 완성까지 남은 문장 수 : 50";
@@ -218,33 +225,29 @@ function createNewPage() {
   renderPage("slideLeft");
 }
 
-/* Firebase 실시간 수신 */
+/* Firebase 감지 */
 firebase.database().ref("messages").on("child_added", snapshot => {
   const data = snapshot.val();
   if (!data || !data.text) return;
 
   appendSentence(data.text);
   remaining--;
-  counter.textContent = `이야기 완성까지 남은 문장 수 : ${remaining}`;
+
+  counter.textContent =
+    `이야기 완성까지 남은 문장 수 : ${remaining}`;
 
   if (remaining <= 0) createNewPage();
 });
 
-/* 좌우 페이지 이동 */
+/* 좌우 버튼 */
 leftArrow.addEventListener("click", () => {
-  if (currentPage === 1) {
-    alert("이야기의 첫 페이지입니다");
-    return;
-  }
+  if (currentPage === 1) return alert("첫 페이지입니다");
   currentPage--;
   renderPage("slideRight");
 });
 
 rightArrow.addEventListener("click", () => {
-  if (currentPage === totalPages) {
-    alert("아직 이야기가 완성되지 않았어요!");
-    return;
-  }
+  if (currentPage === totalPages) return alert("아직 다음 페이지가 없습니다!");
   currentPage++;
   renderPage("slideLeft");
 });
