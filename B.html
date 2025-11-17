@@ -36,23 +36,27 @@
     text-align: right;
   }
 
-  /* 원고지 — 줄 위치/간격 정확 조정 */
+  /* 원고지 */
   #textContainer {
     font-family: 'Song Myung', serif;
     width: 80%;
     height: 70%;
-    padding: 34px 35px 30px 35px; /* top padding 보정 */
+    padding: 30px 35px 30px 35px;
 
     border-radius: 12px;
 
-    /* 줄 간격 = 42px */
+    /* 줄 간격 42px + 줄을 약간 위로 */
     background:
       linear-gradient(to bottom, rgba(180,60,60,0.40) 1px, transparent 1px),
       url('https://www.transparenttextures.com/patterns/paper-fibers.png');
+
     background-size: 100% 42px, 400px 400px;
+    background-position-y: -4px;  /* 🔥 줄을 위로 올림 */
 
     background-attachment: local;
-    background-color: rgba(255,255,255,0.92);
+
+    /* 🔥 원고지 배경을 더 투명하게 (옛날 버전처럼) */
+    background-color: rgba(255,255,255,0.85);
 
     font-size: 23px;
     line-height: 42px;
@@ -105,14 +109,13 @@
     bottom: 20px;
     font-size: 20px;
     color: white;
-    font-family: 'Diphylleia', serif;
   }
 </style>
 </head>
 
 <body>
 
-<!-- MP3 자동 재생 -->
+<!-- 🔊 MP3 자동 재생 -->
 <audio id="bgm" src="bgm.mp3" autoplay loop></audio>
 
 <div id="counterBox">
@@ -137,19 +140,19 @@ const firebaseConfig = {
   authDomain: "display1-2e379.firebaseapp.com",
   databaseURL: "https://display1-2e379-default-rtdb.europe-west1.firebasedatabase.app",
   projectId: "display1-2e379",
-  storageBucket: "display1-2e379firebasestorage.appspot.com",
+  storageBucket: "display1-2e379.firebasestorage.appspot.com",
   messagingSenderId: "509686302807",
   appId: "1:509686302807:web:7a73181d53f7ca22363b12"
 };
 firebase.initializeApp(firebaseConfig);
 
-/* 상태 */
+/* 변수 */
 let remaining = 50;
 let currentPage = 1;
 let totalPages = 1;
 let pages = { 1: "" };
 
-/* 기본 문장 (첫 문장 고정 검정색) */
+/* 첫 문장 (검정색 고정) */
 const baseSentence =
 "백설공주는 마녀가 건넨 탐스럽게 빨간 사과를 한입 크게 베어물었고, 마녀는 그런 공주를 보며 의미심장한 웃음을 짓고 있었다.";
 
@@ -167,7 +170,7 @@ const inkColors = [
 
 let lastColor = null;
 
-/* 랜덤 잉크 선택 */
+/* 랜덤 잉크 (직전과 겹치지 않게) */
 function getInkColor() {
   let c = inkColors[Math.floor(Math.random() * inkColors.length)];
   while (c === lastColor) {
@@ -177,12 +180,12 @@ function getInkColor() {
   return c;
 }
 
-/* 문장 스타일 (랜덤 잉크 + 굵기) */
+/* 문장 스타일 */
 function styledSentence(text) {
   return `<span style="color:${getInkColor()}; font-weight:600;">${text.trim()} </span>`;
 }
 
-/* ⬛ 첫 페이지 첫 문장: 검정색 고정 */
+/* 🔥 첫 페이지는 검정색 */
 pages[1] =
   `<span style="color:#000; font-weight:600;">${baseSentence}</span> `;
 
@@ -194,7 +197,7 @@ function appendSentence(text) {
   renderPage();
 }
 
-/* 페이지 렌더링 */
+/* 렌더링 */
 function renderPage(animation = "") {
   container.className = "";
   void container.offsetWidth;
@@ -219,7 +222,7 @@ function createNewPage() {
   renderPage("slideLeft");
 }
 
-/* Firebase 실시간 수신 */
+/* Firebase 수신 */
 firebase.database().ref("messages").on("child_added", snapshot => {
   const data = snapshot.val();
   if (!data || !data.text) return;
@@ -233,7 +236,7 @@ firebase.database().ref("messages").on("child_added", snapshot => {
 
 /* 페이지 이동 */
 leftArrow.addEventListener("click", () => {
-  if (currentPage === 1) return alert("첫 페이지입니다");
+  if (currentPage === 1) return alert("첫 페이지입니다!");
   currentPage--;
   renderPage("slideRight");
 });
@@ -247,4 +250,3 @@ rightArrow.addEventListener("click", () => {
 
 </body>
 </html>
-
