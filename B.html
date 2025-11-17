@@ -45,11 +45,11 @@
     border-radius: 12px;
 
     background:
-      linear-gradient(to bottom, rgba(150,20,20,0.45) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(180,60,60,0.4) 1px, transparent 1px),
       url('https://www.transparenttextures.com/patterns/paper-fibers.png');
     background-size: 100% 32px, 400px 400px;
     background-attachment: local;
-    background-color: rgba(255,255,255,0.85);
+    background-color: rgba(255,255,255,0.92);
 
     color: #222;
     font-size: 20px;
@@ -153,25 +153,25 @@ const container = document.getElementById("textContainer");
 const counter = document.getElementById("counter");
 const pageStatus = document.getElementById("pageStatus");
 
-/* 🎨 새로운 다크 잉크 색상 12종 */
+/* 🎨 더 밝은 잉크 색상 12종 */
 const inkColors = [
-  "#1B1B1B",  // Deep Black
-  "#2C1A1A",  // Dark Burgundy
-  "#3A0F2F",  // Wine Violet
-  "#0D1A36",  // Navy Black
-  "#17303B",  // Deep Teal
-  "#0F2A23",  // Forest Green
-  "#1C2E40",  // Slate Blue Gray
-  "#2A0F3A",  // Royal Violet Black
-  "#3B1F0C",  // Dark Chocolate
-  "#12312F",  // Dark Cyan Teal
-  "#331A14",  // Espresso Brown
-  "#1A2433"   // Midnight Blue
+  "#4A4A4A",  // Soft Black
+  "#A04A4A",  // Light Burgundy
+  "#B24C7A",  // Bright Wine Violet
+  "#2F5FA3",  // Blue Navy
+  "#3C8090",  // Teal Blue
+  "#2F7A67",  // Forest Green Light
+  "#4A6F8F",  // Slate Blue Light
+  "#7A3C98",  // Violet Indigo
+  "#A5633F",  // Milk Chocolate
+  "#2F8A83",  // Cyan Teal Light
+  "#7A4B35",  // Espresso Milk
+  "#3C4F7F"   // Midnight Blue Bright
 ];
 
 let lastColor = null;
 
-/* 직전 색과 겹치지 않는 랜덤 잉크 선택 */
+/* 직전과 다른 랜덤 잉크 선택 */
 function getInkColor() {
   let c = inkColors[Math.floor(Math.random() * inkColors.length)];
   while (c === lastColor) {
@@ -181,12 +181,12 @@ function getInkColor() {
   return c;
 }
 
-/* 첫 페이지 기본 문장 삽입 */
+/* 첫 페이지 기본 문장 추가 */
 pages[1] =
   `<span style="color:${getInkColor()}">${baseSentence} </span>`;
 renderPage();
 
-/* 문장 추가 함수 */
+/* 문장 추가 */
 function appendSentence(text) {
   const span =
     `<span style="color:${getInkColor()}">${text.trim()} </span>`;
@@ -227,12 +227,10 @@ firebase.database().ref("messages").on("child_added", snapshot => {
   remaining--;
   counter.textContent = `이야기 완성까지 남은 문장 수 : ${remaining}`;
 
-  if (remaining <= 0) {
-    createNewPage();
-  }
+  if (remaining <= 0) createNewPage();
 });
 
-/* 좌우 버튼 */
+/* 좌우 페이지 이동 */
 leftArrow.addEventListener("click", () => {
   if (currentPage === 1) {
     alert("이야기의 첫 페이지입니다");
