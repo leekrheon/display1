@@ -4,10 +4,10 @@
   <meta charset="UTF-8" />
   <title>백설공주 이야기의 다음 문장, 어떻게 이어질까요?</title>
 
-  <!-- Diphylleia 폰트 -->
+  <!-- Gowun Batang 폰트 -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Diphylleia&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Gowun+Batang&display=swap" rel="stylesheet">
 
   <style>
     body {
@@ -21,7 +21,7 @@
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
-      font-family: 'Diphylleia', serif;
+      font-family: 'Gowun Batang', serif;
       color: #ffffff;
       text-align: center;
       padding: 0 20px;
@@ -36,15 +36,16 @@
       white-space: pre-line;
       text-align: center;
       color: #ffffff;
+      font-family: 'Gowun Batang', serif;
     }
 
-    /* 입력창 → 더 크게 + 테두리를 버튼과 동일한 4px */
+    /* 입력창 */
     input {
       width: 88vw;
       max-width: 560px;
       font-size: 1.8rem;
       padding: 26px 30px;
-      border: 4px solid #ffffff; /* ← 버튼과 동일한 두께 */
+      border: 4px solid #ffffff;
       border-radius: 45px;
       outline: none;
       text-align: center;
@@ -52,12 +53,13 @@
       background: rgba(255, 255, 255, 0.20);
       color: #ffffff;
       transition: 0.3s ease;
-      font-family: 'Diphylleia', serif;
+      font-family: 'Gowun Batang', serif;
     }
 
     input::placeholder {
       color: rgba(255, 255, 255, 0.6);
       font-size: 1.4rem;
+      font-family: 'Gowun Batang', serif;
     }
 
     input:focus {
@@ -66,7 +68,7 @@
 
     /* 작성 버튼 */
     button {
-      font-family: 'Diphylleia', serif;
+      font-family: 'Gowun Batang', serif;
       font-size: 1.8rem;
       padding: 20px 52px;
       border-radius: 45px;
@@ -109,6 +111,8 @@
       font-size: 1.7rem;
       color: #333;
       box-shadow: 0 0 20px rgba(0,0,0,0.35);
+      font-family: 'Gowun Batang', serif;
+      text-align: center;
     }
 
   </style>
@@ -123,7 +127,7 @@
 
   <!-- 팝업 -->
   <div id="popupOverlay">
-    <div id="popupBox">새로운 맥락이 작성되었습니다!<br>벽면을 봐주세요</div>
+    <div id="popupBox">새로운 맥락이 작성되었습니다!<br>벽면에 작성된 책을 봐주세요:)</div>
   </div>
 
   <!-- Firebase SDK -->
@@ -161,21 +165,19 @@
         .push({ text: msg })
         .then(() => {
           document.getElementById("msg").value = "";
-
-          // 팝업 표시
           showPopup();
         })
         .catch((err) => console.error("전송 오류:", err));
     }
 
-    // 팝업 함수
+    // 팝업 표시 함수
     function showPopup() {
       const overlay = document.getElementById("popupOverlay");
       overlay.style.display = "flex";
 
       setTimeout(() => {
         overlay.style.display = "none";
-      }, 2200); // 2.2초 후 자동 종료
+      }, 2200);
     }
   </script>
 </body>
